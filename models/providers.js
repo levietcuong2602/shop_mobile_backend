@@ -3,7 +3,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define(
-    'SaleDetails',
+    'Providers',
     {
       id: {
         type: DataTypes.INTEGER(11),

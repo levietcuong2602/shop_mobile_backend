@@ -1,5 +1,3 @@
-// const senquelize = require('senquelize');
-
 const { Users } = require('../models');
 const {
   hashPassword,
@@ -33,14 +31,14 @@ async function verifyUser({ email, passwd }) {
     where: {
       email,
     },
-    attributes: [
-      'id',
-      'full_name',
-      'email',
-      'phone_number',
-      'address',
-      'passwd',
-    ],
+    // attributes: [
+    //   'id',
+    //   'full_name',
+    //   'email',
+    //   'phone_number',
+    //   'address',
+    //   'passwd',
+    // ],
     raw: true,
   });
   const isVerify = await comparePassword(passwd, userData.passwd);
@@ -56,6 +54,7 @@ async function verifyUser({ email, passwd }) {
       email: userData.email,
       fullName: userData.full_name,
       token,
+      ...userData,
     };
   }
 
