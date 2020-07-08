@@ -1,7 +1,7 @@
 /* eslint-disable no-return-await */
 /* eslint-disable radix */
 const { Op } = require('sequelize');
-const { Products } = require('../models');
+const { Products, AttributeValues } = require('../models');
 const { logger } = require('../utils/logger');
 const statusCode = require('../errors/statusCode');
 const CustomError = require('../errors/CustomError');
@@ -21,6 +21,9 @@ async function gets({
   endTime,
   inputSearch,
   productType,
+  providerId,
+  storageValue,
+  order = [],
 }) {
   try {
     limit = parseInt(limit);
@@ -36,9 +39,25 @@ async function gets({
     if (productType) {
       query.where.product_type_id = productType;
     }
+    if (providerId) {
+      query.where.provider_id = providerId;
+    }
     if (startTime && endTime) {
       query.where.created_at = {
         [Op.between]: [new Date(startTime), new Date(endTime)],
+      };
+    }
+    query.order = order;
+    if (storageValue) {
+      const ids = await AttributeValues.findAll({
+        where: {
+          value: storageValue,
+        },
+        attributes: ['id'],
+        raw: true,
+      });
+      query.where.id = {
+        [Op.in]: ids.map(({ id }) => id),
       };
     }
     query.raw = true;

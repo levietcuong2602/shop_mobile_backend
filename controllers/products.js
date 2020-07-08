@@ -2,7 +2,15 @@ const validate = require('../middlewares/validate');
 const productService = require('../services/products');
 
 async function gets(req, res) {
-  const { limit, pageNum, inputSearch, productType } = req.query;
+  const {
+    limit,
+    pageNum,
+    inputSearch,
+    productType,
+    providerId,
+    storageValue,
+    order,
+  } = req.query;
   let { startTime, endTime } = req.query;
 
   req
@@ -66,6 +74,18 @@ async function gets(req, res) {
   }
   if (productType) {
     params.productType = productType;
+  }
+  if (providerId) {
+    params.providerId = providerId;
+  }
+  if (storageValue) {
+    params.storageValue = storageValue;
+  }
+  if (order) {
+    params.order = order
+      .trim()
+      .split('|')
+      .map(item => item.split(','));
   }
 
   const results = await productService.gets(params);
