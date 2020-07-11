@@ -105,12 +105,27 @@ async function getById(req, res) {
   return res.send({ status: 1, results });
 }
 
+async function getProductTypes(req, res) {
+  const results = await productService.getProductTypes();
+
+  return res.send({ status: 1, results });
+}
+
 async function update(req, res) {
   return res.send({ status: 1 });
 }
 
 async function remove(req, res) {
-  return res.send({ status: 1 });
+  req
+    .checkParams('productId')
+    .not()
+    .isEmpty()
+    .withMessage('field product_id is not empty');
+  validate.validateParams(req);
+  const { productId } = req.params;
+  const results = await productService.remove(productId);
+
+  return res.send({ status: 1, results });
 }
 
 async function create(req, res) {
@@ -123,4 +138,5 @@ module.exports = {
   remove,
   create,
   getById,
+  getProductTypes,
 };

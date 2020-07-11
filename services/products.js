@@ -1,7 +1,7 @@
 /* eslint-disable no-return-await */
 /* eslint-disable radix */
 const { Op } = require('sequelize');
-const { Products, AttributeValues } = require('../models');
+const { Products, AttributeValues, ProductType } = require('../models');
 const { logger } = require('../utils/logger');
 const statusCode = require('../errors/statusCode');
 const CustomError = require('../errors/CustomError');
@@ -33,7 +33,7 @@ async function gets({
     query.where = {};
     if (inputSearch) {
       query.where.product_name = {
-        [Op.like]: inputSearch,
+        [Op.like]: `%${inputSearch}%`,
       };
     }
     if (productType) {
@@ -109,9 +109,26 @@ async function gets({
   }
 }
 
+async function getProductTypes() {
+  return await ProductType.findAll({
+    attributes: ['id', ['product_type_name', 'name']],
+    raw: true,
+  });
+}
+
+async function remove(productId) {
+  return await Products.destroy({
+    where: {
+      id: productId,
+    },
+  });
+}
+
 module.exports = {
   create,
   findById,
   update,
   gets,
+  getProductTypes,
+  remove,
 };

@@ -6,7 +6,12 @@ const productController = require('../controllers/products');
 
 router.get('/products', asyncMiddlware(productController.gets));
 router.get('/products/:productId', asyncMiddlware(productController.getById));
+router.get(
+  '/products/types/all',
+  asyncMiddlware(productController.getProductTypes),
+);
 router.post('/products', asyncMiddlware(productController.create));
-router.put('/proucts/:productId', asyncMiddlware(productController.update));
+router.put('/products/:productId', asyncMiddlware(productController.update));
+router.delete('/products/:productId', asyncMiddlware(productController.remove));
 
 module.exports = router;
